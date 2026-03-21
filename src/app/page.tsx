@@ -1,52 +1,71 @@
 import Image from "next/image";
+import Link from "next/link";
+
+const minigames = [
+	{
+		slug: "minigame1",
+		title: "Minigame 1",
+		description: "Launch the first prototype scene.",
+		thumbnail: "/minigames/minigame1-thumbnail.svg",
+	},
+];
 
 export default function Home() {
 	return (
-		<div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-			<main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-				<Image className="dark:invert" src="/next.svg" alt="Next.js logo" width={180} height={38} priority />
-				<ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-					<li className="mb-2 tracking-[-.01em]">
-						Get started by editing{" "}
-						<code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-							src/app/page.tsx
-						</code>
-						.
-					</li>
-					<li className="tracking-[-.01em]">Save and see your changes instantly.</li>
-				</ol>
+		<div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(0,255,208,0.18),_transparent_35%),linear-gradient(180deg,#07111f_0%,#04070d_100%)] px-6 py-10 text-white sm:px-10 lg:px-16">
+			<main className="mx-auto flex w-full max-w-6xl flex-col gap-10">
+				<header className="rounded-[2rem] border border-cyan-400/20 bg-slate-950/70 px-6 py-8 shadow-[0_0_80px_rgba(34,211,238,0.08)] backdrop-blur sm:px-8">
+					<p className="text-sm font-medium uppercase tracking-[0.35em] text-cyan-300/80">Title</p>
+					<h1 className="mt-4 text-4xl font-semibold tracking-[0.08em] text-cyan-100 sm:text-6xl">
+						CYBER Minigames
+					</h1>
+					<p className="mt-4 max-w-2xl text-sm text-slate-300 sm:text-base">
+						A compact arcade hub for Phaser experiments. Pick a minigame to launch it in the browser.
+					</p>
+				</header>
 
-				<div className="flex gap-4 items-center flex-col sm:flex-row">
-					<a
-						className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-						href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						Read our docs
-					</a>
-				</div>
+				<section>
+					<div className="mb-4 flex items-center justify-between gap-4">
+						<div>
+							<p className="text-xs uppercase tracking-[0.3em] text-cyan-300/70">Minigames</p>
+							<h2 className="mt-2 text-2xl font-semibold text-slate-100">Available Prototypes</h2>
+						</div>
+						<p className="text-sm text-slate-400">{minigames.length} playable build</p>
+					</div>
+
+					<div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+						{minigames.map((game) => (
+							<Link
+								key={game.slug}
+								href={`/${game.slug}`}
+								className="group overflow-hidden rounded-[1.75rem] border border-cyan-400/20 bg-slate-950/70 transition-transform duration-200 hover:-translate-y-1 hover:border-cyan-300/45 hover:shadow-[0_18px_60px_rgba(34,211,238,0.12)]"
+							>
+								<div className="relative aspect-[16/10] overflow-hidden border-b border-cyan-400/20 bg-slate-900">
+									<Image
+										src={game.thumbnail}
+										alt={`${game.title} thumbnail`}
+										fill
+										priority
+										className="object-cover transition-transform duration-300 group-hover:scale-105"
+									/>
+								</div>
+								<div className="space-y-3 px-5 py-5">
+									<div className="flex items-center justify-between gap-3">
+										<h3 className="text-xl font-semibold text-slate-50">{game.title}</h3>
+										<span className="rounded-full border border-cyan-400/30 px-3 py-1 text-xs uppercase tracking-[0.25em] text-cyan-200">
+											Live
+										</span>
+									</div>
+									<p className="text-sm text-slate-300">{game.description}</p>
+									<div className="inline-flex items-center rounded-full bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950">
+										Start minigame
+									</div>
+								</div>
+							</Link>
+						))}
+					</div>
+				</section>
 			</main>
-			<footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-				<a
-					className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-					href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image aria-hidden src="/file.svg" alt="File icon" width={16} height={16} />
-					Learn
-				</a>
-				<a
-					className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-					href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-					Go to nextjs.org →
-				</a>
-			</footer>
 		</div>
 	);
 }
