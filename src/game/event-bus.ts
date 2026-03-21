@@ -2,6 +2,20 @@ type GameEventMap = {
 	"scene-ready": {
 		sceneKey: string;
 	};
+	"input-move": {
+		x: number;
+		y: number;
+		active: boolean;
+	};
+	"game-state": {
+		sceneKey: string;
+		status: "booting" | "playing" | "won" | "lost";
+		remainingChunks: number;
+		totalChunks: number;
+		elapsedMs: number;
+		message: string;
+	};
+	"restart-game": Record<string, never>;
 };
 
 type GameEventName = keyof GameEventMap;
@@ -28,6 +42,11 @@ class GameEventBus {
 
 export const GAME_EVENTS = {
 	SCENE_READY: "scene-ready",
+	INPUT_MOVE: "input-move",
+	GAME_STATE: "game-state",
+	RESTART_GAME: "restart-game",
 } as const;
+
+export type GameStateEvent = GameEventMap[typeof GAME_EVENTS.GAME_STATE];
 
 export const gameEventBus = new GameEventBus();
