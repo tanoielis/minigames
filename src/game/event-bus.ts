@@ -2,6 +2,32 @@ type GameEventMap = {
 	"scene-ready": {
 		sceneKey: string;
 	};
+	"minigame3-layout": {
+		endpoints: Array<{
+			endpointId: string;
+			shapeKind:
+				| "circle"
+				| "square"
+				| "triangle"
+				| "diamond"
+				| "star"
+				| "hexagon"
+				| "pentagon"
+				| "cross"
+				| "plus"
+				| "chevron"
+				| "moon"
+				| "drop";
+			x: number;
+			y: number;
+			visible: boolean;
+			interactive: boolean;
+			state: "idle" | "source" | "success" | "failure" | "pressed";
+		}>;
+	};
+	"minigame3-select-endpoint": {
+		endpointId: string;
+	};
 	"input-move": {
 		x: number;
 		y: number;
@@ -47,6 +73,8 @@ class GameEventBus {
 
 export const GAME_EVENTS = {
 	SCENE_READY: "scene-ready",
+	MINIGAME3_LAYOUT: "minigame3-layout",
+	MINIGAME3_SELECT_ENDPOINT: "minigame3-select-endpoint",
 	INPUT_MOVE: "input-move",
 	GAME_STATE: "game-state",
 	RESTART_GAME: "restart-game",

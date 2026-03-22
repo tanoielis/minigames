@@ -14,6 +14,12 @@ const minigames = [
 		description: "Press jump to clear ten holes in a side-scrolling skateboard run.",
 		thumbnail: "/minigames/minigame2-thumbnail.svg",
 	},
+	{
+		slug: "minigame3",
+		title: "Entanglement",
+		description: "Trace crossing spiral wires and match the lit symbol to its hidden partner before time runs out.",
+		thumbnail: "/minigames/minigame3-thumbnail.svg",
+	},
 ];
 
 export default function Home() {
