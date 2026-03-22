@@ -4,6 +4,8 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev --port 8787",
+		"o-build": "opennextjs-cloudflare build",
+		"o-deploy": "opennextjs-cloudflare deploy",
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint src next.config.ts open-next.config.ts eslint.config.mjs",
