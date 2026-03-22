@@ -73,7 +73,7 @@ export default function ActionButtonControl({ disabled, label }: { disabled: boo
 						userSelect: "none",
 					}}
 				>
-					{label ?? "Jump"}
+					{label ?? "Action"}
 				</button>
 			</div>
 		</div>

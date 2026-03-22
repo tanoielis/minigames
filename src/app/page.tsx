@@ -20,6 +20,12 @@ const minigames = [
 		description: "Trace crossing spiral wires and match the lit symbol to its hidden partner before time runs out.",
 		thumbnail: "/minigames/minigame3-thumbnail.svg",
 	},
+	{
+		slug: "minigame4",
+		title: "Neon Rider",
+		description: "Flip your drift direction and weave through three-lane traffic for twenty-four seconds on a vertical cyber highway.",
+		thumbnail: "/minigames/minigame4-thumbnail.svg",
+	},
 ];
 
 export default function Home() {
@@ -43,7 +49,7 @@ export default function Home() {
 						</div>
 					</div>
 
-					<div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+					<div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
 						{minigames.map((game) => (
 							<Link
 								key={game.slug}

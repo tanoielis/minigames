@@ -88,7 +88,7 @@ export default function Minigame2Shell() {
 				</main>
 			</div>
 
-			<ActionButtonControl disabled={isFinished || gameState.status === "booting"} label="Jump" />
+			<ActionButtonControl disabled={isFinished || gameState.status === "booting"} label="Action" />
 		</>
 	);
 }

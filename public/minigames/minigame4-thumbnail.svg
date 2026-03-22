@@ -1,0 +1,56 @@
+<svg width="960" height="600" viewBox="0 0 960 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="600" rx="48" fill="#050914"/>
+  <rect x="58" y="32" width="844" height="536" rx="38" fill="url(#bg)"/>
+  <path d="M244 74H716L828 540H132L244 74Z" fill="#0A1220" stroke="#20344A" stroke-width="5"/>
+  <path d="M480 92V542" stroke="#F8FAFC" stroke-width="10" stroke-linecap="round" stroke-dasharray="30 28" opacity="0.3"/>
+  <path d="M322 92V542" stroke="#38BDF8" stroke-width="4" stroke-linecap="round" opacity="0.38"/>
+  <path d="M638 92V542" stroke="#38BDF8" stroke-width="4" stroke-linecap="round" opacity="0.38"/>
+  <rect x="250" y="146" width="146" height="22" rx="11" fill="#22D3EE" fill-opacity="0.24"/>
+  <rect x="564" y="198" width="132" height="22" rx="11" fill="#F472B6" fill-opacity="0.24"/>
+  <rect x="228" y="322" width="190" height="22" rx="11" fill="#F59E0B" fill-opacity="0.24"/>
+  <rect x="542" y="396" width="156" height="22" rx="11" fill="#22D3EE" fill-opacity="0.24"/>
+  <g filter="url(#trafficGlow)">
+    <rect x="274" y="156" width="108" height="164" rx="28" fill="#94A3B8"/>
+    <rect x="294" y="176" width="68" height="28" rx="10" fill="#E0F2FE"/>
+    <rect x="304" y="286" width="48" height="7" rx="3.5" fill="#22D3EE"/>
+  </g>
+  <g filter="url(#trafficGlowPink)">
+    <rect x="578" y="250" width="92" height="148" rx="26" fill="#64748B"/>
+    <rect x="596" y="270" width="56" height="24" rx="8" fill="#FCE7F3"/>
+    <rect x="604" y="368" width="40" height="7" rx="3.5" fill="#F472B6"/>
+  </g>
+  <g filter="url(#bikeGlow)">
+    <ellipse cx="480" cy="456" rx="84" ry="26" fill="#22D3EE" fill-opacity="0.24"/>
+    <circle cx="446" cy="470" r="18" fill="#070B16"/>
+    <circle cx="520" cy="456" r="16" fill="#070B16"/>
+    <circle cx="446" cy="470" r="10" fill="#F472B6"/>
+    <circle cx="520" cy="456" r="9" fill="#22D3EE"/>
+    <path d="M432 452L466 404L510 420L536 458L486 474L432 452Z" fill="#F472B6"/>
+    <rect x="470" y="398" width="24" height="86" rx="12" fill="#7DD3FC"/>
+    <path d="M468 386L492 350L514 380L496 404L468 386Z" fill="#E0F2FE"/>
+    <rect x="450" y="482" width="62" height="12" rx="6" fill="#FB7185"/>
+  </g>
+  <text x="84" y="104" fill="#D1FAFF" font-family="Arial, sans-serif" font-size="54" font-weight="700" letter-spacing="4">NEON RIDER</text>
+  <text x="84" y="148" fill="#7DD3FC" font-family="Arial, sans-serif" font-size="22" letter-spacing="8">CYBER HIGHWAY SURVIVAL</text>
+  <defs>
+    <linearGradient id="bg" x1="480" y1="32" x2="480" y2="568" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#091225"/>
+      <stop offset="1" stop-color="#02040A"/>
+    </linearGradient>
+    <filter id="trafficGlow" x="246" y="128" width="164" height="220" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="12" result="effect1_foregroundBlur_0_1"/>
+    </filter>
+    <filter id="trafficGlowPink" x="550" y="222" width="148" height="204" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="12" result="effect1_foregroundBlur_0_1"/>
+    </filter>
+    <filter id="bikeGlow" x="404" y="338" width="160" height="174" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="10" result="effect1_foregroundBlur_0_1"/>
+    </filter>
+  </defs>
+</svg>
