@@ -4,9 +4,15 @@ import Link from "next/link";
 const minigames = [
 	{
 		slug: "minigame1",
-		title: "Minigame 1",
-		description: "Launch the first prototype scene.",
+		title: "Penguin Panic",
+		description: "Keep the penguin alive as hidden ice chunks begin to sink away.",
 		thumbnail: "/minigames/minigame1-thumbnail.svg",
+	},
+	{
+		slug: "minigame2",
+		title: "Skater City",
+		description: "Press jump to clear ten holes in a side-scrolling skateboard run.",
+		thumbnail: "/minigames/minigame2-thumbnail.svg",
 	},
 ];
 
@@ -20,7 +26,7 @@ export default function Home() {
 						CYBER Minigames
 					</h1>
 					<p className="mt-4 max-w-2xl text-sm text-slate-300 sm:text-base">
-						A compact arcade hub for Phaser experiments. Pick a minigame to launch it in the browser.
+						Pick a minigame to launch.
 					</p>
 				</header>
 
@@ -28,9 +34,7 @@ export default function Home() {
 					<div className="mb-4 flex items-center justify-between gap-4">
 						<div>
 							<p className="text-xs uppercase tracking-[0.3em] text-cyan-300/70">Minigames</p>
-							<h2 className="mt-2 text-2xl font-semibold text-slate-100">Available Prototypes</h2>
 						</div>
-						<p className="text-sm text-slate-400">{minigames.length} playable build</p>
 					</div>
 
 					<div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -52,9 +56,6 @@ export default function Home() {
 								<div className="space-y-3 px-5 py-5">
 									<div className="flex items-center justify-between gap-3">
 										<h3 className="text-xl font-semibold text-slate-50">{game.title}</h3>
-										<span className="rounded-full border border-cyan-400/30 px-3 py-1 text-xs uppercase tracking-[0.25em] text-cyan-200">
-											Live
-										</span>
 									</div>
 									<p className="text-sm text-slate-300">{game.description}</p>
 									<div className="inline-flex items-center rounded-full bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950">

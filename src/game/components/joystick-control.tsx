@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { GAME_EVENTS, gameEventBus } from "@/game/event-bus";
 
-const PAD_SIZE = 160;
-const THUMB_SIZE = 64;
-const MAX_RADIUS = 52;
+const PAD_SIZE = 132;
+const THUMB_SIZE = 52;
+const MAX_RADIUS = 42;
 
 function clampThumbPosition(dx: number, dy: number) {
 	const distance = Math.hypot(dx, dy);
@@ -97,17 +97,17 @@ export default function JoystickControl({ disabled }: { disabled: boolean }) {
 	};
 
 	return (
-		<div className="pointer-events-none fixed inset-x-0 bottom-6 z-30 flex justify-center px-6 sm:bottom-10">
+		<div className="pointer-events-none fixed inset-x-0 bottom-4 z-30 flex justify-center px-4 sm:bottom-8 sm:px-6">
 			<div className="flex flex-col items-center gap-3">
-				<p className="text-xs uppercase tracking-[0.35em] text-cyan-200/70">Joystick</p>
+				<p className="text-[10px] uppercase tracking-[0.35em] text-cyan-200/70 sm:text-xs">Joystick</p>
 				<div
 					ref={padRef}
 					onPointerDown={handlePointerDown}
 					className="pointer-events-auto relative rounded-full border border-cyan-300/25 bg-slate-950/60 shadow-[0_0_40px_rgba(34,211,238,0.12)] backdrop-blur touch-none"
 					style={{ width: PAD_SIZE, height: PAD_SIZE }}
 				>
-					<div className="absolute inset-[18px] rounded-full border border-dashed border-cyan-300/15" />
-					<div className="absolute inset-[40px] rounded-full border border-cyan-300/12" />
+					<div className="absolute inset-[14px] rounded-full border border-dashed border-cyan-300/15 sm:inset-[18px]" />
+					<div className="absolute inset-[32px] rounded-full border border-cyan-300/12 sm:inset-[40px]" />
 					<div
 						className="absolute left-1/2 top-1/2 rounded-full border border-cyan-100/35 bg-cyan-300/85 shadow-[0_0_30px_rgba(103,232,249,0.35)] transition-transform duration-75"
 						style={{

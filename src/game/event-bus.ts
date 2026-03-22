@@ -16,6 +16,9 @@ type GameEventMap = {
 		message: string;
 	};
 	"restart-game": Record<string, never>;
+	"action-press": {
+		active: boolean;
+	};
 };
 
 type GameEventName = keyof GameEventMap;
@@ -45,6 +48,7 @@ export const GAME_EVENTS = {
 	INPUT_MOVE: "input-move",
 	GAME_STATE: "game-state",
 	RESTART_GAME: "restart-game",
+	ACTION_PRESS: "action-press",
 } as const;
 
 export type GameStateEvent = GameEventMap[typeof GAME_EVENTS.GAME_STATE];

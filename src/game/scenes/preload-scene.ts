@@ -46,12 +46,14 @@ export class PreloadScene extends Phaser.Scene {
 		});
 
 		this.load.image("minigame1-thumb", "/minigames/minigame1-thumbnail.svg");
+		this.load.image("minigame2-thumb", "/minigames/minigame2-thumbnail.svg");
 		this.load.image("next-mark", "/next.svg");
 		this.load.image("globe-icon", "/globe.svg");
 		this.load.image("file-icon", "/file.svg");
 	}
 
 	create() {
-		this.scene.start("minigame1");
+		const startSceneKey = this.registry.get("startSceneKey") ?? "minigame1";
+		this.scene.start(startSceneKey);
 	}
 }
