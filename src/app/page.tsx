@@ -26,6 +26,12 @@ const minigames = [
 		description: "Flip your drift direction and weave through three-lane traffic for twenty seconds on a vertical cyber highway.",
 		thumbnail: "/minigames/minigame4-thumbnail.svg",
 	},
+	{
+		slug: "minigame5",
+		title: "Joust Royale",
+		description: "Steady your lance marker with the joystick, track the rival knight through the charge, and win the best-of-three tilt.",
+		thumbnail: "/minigames/minigame5-thumbnail.svg",
+	},
 ];
 
 export default function Home() {
@@ -49,7 +55,7 @@ export default function Home() {
 						</div>
 					</div>
 
-					<div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+					<div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
 						{minigames.map((game) => (
 							<Link
 								key={game.slug}

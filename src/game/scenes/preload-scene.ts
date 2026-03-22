@@ -49,8 +49,11 @@ export class PreloadScene extends Phaser.Scene {
 		this.load.image("minigame2-thumb", "/minigames/minigame2-thumbnail.svg");
 		this.load.image("minigame3-thumb", "/minigames/minigame3-thumbnail.svg");
 		this.load.image("minigame4-thumb", "/minigames/minigame4-thumbnail.svg");
+		this.load.image("minigame5-thumb", "/minigames/minigame5-thumbnail.svg");
 		this.load.image("skater-sprite", "/minigames/skater.png");
 		this.load.image("rider-sprite", "/minigames/rider.png");
+		this.load.image("player-knight-sprite", "/minigames/player-knight.png");
+		this.load.image("enemy-knight-sprite", "/minigames/enemy-knight.png");
 		this.load.image("next-mark", "/next.svg");
 		this.load.image("globe-icon", "/globe.svg");
 		this.load.image("file-icon", "/file.svg");

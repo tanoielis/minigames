@@ -41,6 +41,9 @@ type GameEventMap = {
 		remainingChunks: number;
 		totalChunks: number;
 		elapsedMs: number;
+		currentRound?: number;
+		playerScore?: number;
+		enemyScore?: number;
 		message: string;
 	};
 	"restart-game": {
