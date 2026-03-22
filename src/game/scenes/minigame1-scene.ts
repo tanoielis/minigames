@@ -23,6 +23,12 @@ const ICE_COLOR = 0xdffcff;
 const WARNING_COLOR = 0x2f9fff;
 const WATER_COLOR = 0x07172b;
 const CELL_SIZE = 28;
+const WIND_GRID_SPACING_X = 88;
+const WIND_GRID_SPACING_Y = 72;
+const WIND_GRID_MARGIN_X = 96;
+const WIND_GRID_TOP = 92;
+const WIND_GRID_BOTTOM_OFFSET = 86;
+const WIND_FORCE_MULTIPLIER = 3.6;
 
 function mixColor(start: number, end: number, amount: number) {
 	const clamped = Phaser.Math.Clamp(amount, 0, 1);
@@ -45,10 +51,14 @@ export class Minigame1Scene extends Phaser.Scene {
 	private inputVector = new Phaser.Math.Vector2();
 	private playerVelocity = new Phaser.Math.Vector2();
 	private playerPosition = new Phaser.Math.Vector2();
+	private windForce = new Phaser.Math.Vector2();
+	private generalWindForce = new Phaser.Math.Vector2();
+	private targetGeneralWindForce = new Phaser.Math.Vector2();
 	private penguin?: Phaser.GameObjects.Container;
 	private penguinShadow?: Phaser.GameObjects.Ellipse;
 	private waterRipples?: Phaser.GameObjects.Graphics;
 	private nextSinkAt = 0;
+	private nextWindShiftAt = 0;
 	private warningChunkId: number | null = null;
 	private roundStartTime = 0;
 	private hudLastEmittedAt = 0;
@@ -77,6 +87,7 @@ export class Minigame1Scene extends Phaser.Scene {
 			return;
 		}
 
+		this.updateWind(time, delta);
 		this.updateWarningChunk(time);
 		this.updatePlayer(delta);
 
@@ -101,15 +112,22 @@ export class Minigame1Scene extends Phaser.Scene {
 			gameEventBus.on(GAME_EVENTS.INPUT_MOVE, ({ x, y }) => {
 				this.inputVector.set(x, y);
 			}),
-			gameEventBus.on(GAME_EVENTS.RESTART_GAME, () => {
+			gameEventBus.on(GAME_EVENTS.RESTART_GAME, ({ sceneKey }) => {
+				if (sceneKey !== this.sys.settings.key || !this.scene.manager || !this.sys.settings.active) {
+					return;
+				}
+
 				this.scene.restart();
 			}),
 		];
 
-		this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+		const cleanupBridge = () => {
 			this.cleanupListeners.forEach((cleanup) => cleanup());
 			this.cleanupListeners = [];
-		});
+		};
+
+		this.events.once(Phaser.Scenes.Events.SHUTDOWN, cleanupBridge);
+		this.events.once(Phaser.Scenes.Events.DESTROY, cleanupBridge);
 	}
 
 	private buildBackdrop() {
@@ -135,6 +153,10 @@ export class Minigame1Scene extends Phaser.Scene {
 		this.hudLastEmittedAt = 0;
 		this.playerVelocity.set(0, 0);
 		this.inputVector.set(0, 0);
+		this.windForce.set(0, 0);
+		this.generalWindForce.set(24, 0);
+		this.targetGeneralWindForce.set(24, 0);
+		this.nextWindShiftAt = this.time.now + Phaser.Math.Between(900, 1800);
 
 		this.generateIceChunks();
 		this.spawnPenguin();
@@ -256,10 +278,12 @@ export class Minigame1Scene extends Phaser.Scene {
 		const dt = delta / 1000;
 		const acceleration = 720;
 		const damping = Math.pow(0.985, delta / 16.6667);
-		const maxSpeed = 245;
+		const maxSpeed = 320;
 
 		this.playerVelocity.x += this.inputVector.x * acceleration * dt;
 		this.playerVelocity.y += this.inputVector.y * acceleration * dt;
+		this.playerVelocity.x += this.windForce.x * dt * WIND_FORCE_MULTIPLIER;
+		this.playerVelocity.y += this.windForce.y * dt * WIND_FORCE_MULTIPLIER;
 		this.playerVelocity.scale(damping);
 
 		if (this.playerVelocity.length() > maxSpeed) {
@@ -275,6 +299,50 @@ export class Minigame1Scene extends Phaser.Scene {
 
 		this.penguinShadow.x = this.playerPosition.x;
 		this.penguinShadow.y = this.playerPosition.y + 36;
+	}
+
+	private updateWind(time: number, delta: number) {
+		if (time >= this.nextWindShiftAt) {
+			const targetAngle = Phaser.Math.FloatBetween(-Math.PI * 0.85, Math.PI * 0.85);
+			const targetStrength = Phaser.Math.FloatBetween(26, 54);
+			this.targetGeneralWindForce.set(
+				Math.cos(targetAngle) * targetStrength,
+				Math.sin(targetAngle) * targetStrength * 0.42,
+			);
+			this.nextWindShiftAt = time + Phaser.Math.Between(2200, 4200);
+		}
+
+		const globalBlend = 1 - Math.pow(0.992, delta / 16.6667);
+		this.generalWindForce.x = Phaser.Math.Linear(this.generalWindForce.x, this.targetGeneralWindForce.x, globalBlend);
+		this.generalWindForce.y = Phaser.Math.Linear(this.generalWindForce.y, this.targetGeneralWindForce.y, globalBlend);
+
+		const sampledWind = this.sampleWindVector(this.playerPosition.x, this.playerPosition.y, time);
+		const blend = 1 - Math.pow(0.988, delta / 16.6667);
+		this.windForce.x = Phaser.Math.Linear(this.windForce.x, sampledWind.x, blend);
+		this.windForce.y = Phaser.Math.Linear(this.windForce.y, sampledWind.y, blend);
+	}
+
+	private sampleWindVector(x: number, y: number, time: number) {
+		const gridX = Math.round((x - WIND_GRID_MARGIN_X) / WIND_GRID_SPACING_X);
+		const gridY = Math.round((y - WIND_GRID_TOP) / WIND_GRID_SPACING_Y);
+		const fieldTime = time * 0.00038;
+		const generalAngle = this.generalWindForce.angle();
+		const localAngleOffset =
+			Math.sin(gridX * 0.62 + fieldTime * 0.7) * 0.34 +
+			Math.cos(gridY * 0.77 - fieldTime * 0.9) * 0.28 +
+			Math.sin((gridX + gridY) * 0.31 + fieldTime * 0.45) * 0.14;
+		const baseAngle = generalAngle + localAngleOffset;
+		const generalStrength = Math.max(16, this.generalWindForce.length());
+		const strengthVariance =
+			(Math.sin(gridX * 0.53 - fieldTime * 0.8) + 1) * 5 +
+			(Math.cos(gridY * 0.69 + fieldTime * 0.65) + 1) * 3;
+		const randomRangeFactor =
+			1 +
+			Math.sin(gridX * 1.13 + gridY * 0.61 + fieldTime * 1.7) * 0.12 +
+			Math.cos(gridX * 0.47 - gridY * 0.93 - fieldTime * 1.25) * 0.08;
+		const strength = (generalStrength + strengthVariance) * Phaser.Math.Clamp(randomRangeFactor, 0.82, 1.24);
+
+		return new Phaser.Math.Vector2(Math.cos(baseAngle) * strength, Math.sin(baseAngle) * strength * 0.42);
 	}
 
 	private startChunkWarning(time: number) {
@@ -406,6 +474,34 @@ export class Minigame1Scene extends Phaser.Scene {
 			const rippleHeight = 160 + Math.cos(phase * 1.2) * 28 + index * 16;
 			this.waterRipples.lineStyle(2, 0x1eb8ff, 0.08 + index * 0.01);
 			this.waterRipples.strokeEllipse(width / 2, height / 2 + 24, rippleWidth, rippleHeight);
+		}
+
+		const windMagnitude = this.windForce.length();
+		if (windMagnitude > 4) {
+			for (let anchorY = WIND_GRID_TOP; anchorY <= height - WIND_GRID_BOTTOM_OFFSET; anchorY += WIND_GRID_SPACING_Y) {
+				for (let anchorX = WIND_GRID_MARGIN_X; anchorX <= width - WIND_GRID_MARGIN_X; anchorX += WIND_GRID_SPACING_X) {
+					const localWind = this.sampleWindVector(anchorX, anchorY, time);
+					const localMagnitude = localWind.length();
+					const normalizedStrength = Phaser.Math.Clamp(localMagnitude / 40, 0.18, 1);
+					const direction = localWind.normalize();
+					const length = 16 + normalizedStrength * 24;
+					const pulse = 0.72 + (Math.sin(time * 0.0035 + anchorX * 0.024 + anchorY * 0.018) + 1) * 0.22;
+					const alpha = (0.08 + normalizedStrength * 0.13) * pulse;
+					const lineWidth = 1.5 + normalizedStrength * 1.2;
+
+					this.waterRipples.lineStyle(lineWidth + 1, 0xdffcff, alpha * 0.28);
+					this.waterRipples.beginPath();
+					this.waterRipples.moveTo(anchorX, anchorY);
+					this.waterRipples.lineTo(anchorX + direction.x * length, anchorY + direction.y * length);
+					this.waterRipples.strokePath();
+
+					this.waterRipples.lineStyle(lineWidth, 0xbef8ff, alpha);
+					this.waterRipples.beginPath();
+					this.waterRipples.moveTo(anchorX, anchorY);
+					this.waterRipples.lineTo(anchorX + direction.x * length, anchorY + direction.y * length);
+					this.waterRipples.strokePath();
+				}
+			}
 		}
 	}
 }

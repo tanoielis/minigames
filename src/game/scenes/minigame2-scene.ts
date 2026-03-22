@@ -17,6 +17,7 @@ const SKATER_HEIGHT = 88;
 const RUN_SPEED = 300;
 const GRAVITY = 1450;
 const JUMP_VELOCITY = -680;
+const FOOTPATH_Y = GROUND_Y - 74;
 
 export class Minigame2Scene extends Phaser.Scene {
 	private cleanupListeners: Array<() => void> = [];
@@ -30,6 +31,7 @@ export class Minigame2Scene extends Phaser.Scene {
 	private skaterVelocityY = 0;
 	private trackOffset = 0;
 	private skylineOffset = 0;
+	private sidewalkOffset = 0;
 	private roadGraphics?: Phaser.GameObjects.Graphics;
 	private backgroundGraphics?: Phaser.GameObjects.Graphics;
 	private skaterShadow?: Phaser.GameObjects.Ellipse;
@@ -55,6 +57,7 @@ export class Minigame2Scene extends Phaser.Scene {
 		const dt = delta / 1000;
 		this.trackOffset += RUN_SPEED * dt;
 		this.skylineOffset += RUN_SPEED * 0.22 * dt;
+		this.sidewalkOffset += RUN_SPEED * dt;
 
 		if (this.jumpQueued && this.isGrounded()) {
 			this.skaterVelocityY = JUMP_VELOCITY;
@@ -88,15 +91,22 @@ export class Minigame2Scene extends Phaser.Scene {
 					this.jumpConsumed = true;
 				}
 			}),
-			gameEventBus.on(GAME_EVENTS.RESTART_GAME, () => {
+			gameEventBus.on(GAME_EVENTS.RESTART_GAME, ({ sceneKey }) => {
+				if (sceneKey !== this.sys.settings.key || !this.scene.manager || !this.sys.settings.active) {
+					return;
+				}
+
 				this.scene.restart();
 			}),
 		];
 
-		this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+		const cleanupBridge = () => {
 			this.cleanupListeners.forEach((cleanup) => cleanup());
 			this.cleanupListeners = [];
-		});
+		};
+
+		this.events.once(Phaser.Scenes.Events.SHUTDOWN, cleanupBridge);
+		this.events.once(Phaser.Scenes.Events.DESTROY, cleanupBridge);
 	}
 
 	private createWorld() {
@@ -133,6 +143,7 @@ export class Minigame2Scene extends Phaser.Scene {
 		this.skaterVelocityY = 0;
 		this.trackOffset = 0;
 		this.skylineOffset = 0;
+		this.sidewalkOffset = 0;
 
 		let cursor = this.scale.width + 180;
 		this.holes = Array.from({ length: TOTAL_HOLES }, (_, index) => {
@@ -205,6 +216,9 @@ export class Minigame2Scene extends Phaser.Scene {
 		const stripeWidth = 48;
 		const stripeWrappedOffset = ((this.trackOffset % stripeSpacing) + stripeSpacing) % stripeSpacing;
 		const stripeBaseX = -60 - stripeWrappedOffset;
+		const streetlightSpacing = 210;
+		const streetlightWrappedOffset = ((this.sidewalkOffset % streetlightSpacing) + streetlightSpacing) % streetlightSpacing;
+		const streetlightBaseX = -120 - streetlightWrappedOffset;
 
 		this.backgroundGraphics.clear();
 		this.backgroundGraphics.fillGradientStyle(0x162033, 0x162033, 0x0a1020, 0x0a1020, 1);
@@ -222,6 +236,30 @@ export class Minigame2Scene extends Phaser.Scene {
 					this.backgroundGraphics.fillRect(buildingX + 14 + column * 26, 190 - buildingHeight + row * 18, 10, 10);
 				}
 			}
+		}
+
+		this.backgroundGraphics.fillStyle(0x2b3445, 1);
+		this.backgroundGraphics.fillRect(0, FOOTPATH_Y, width, 26);
+		this.backgroundGraphics.fillStyle(0x44516a, 1);
+		this.backgroundGraphics.fillRect(0, FOOTPATH_Y + 22, width, 4);
+
+		for (let index = 0; index < Math.ceil((width + 240) / streetlightSpacing) + 2; index += 1) {
+			const lightX = streetlightBaseX + index * streetlightSpacing;
+			this.backgroundGraphics.fillStyle(0x3a4254, 1);
+			this.backgroundGraphics.fillRect(lightX, FOOTPATH_Y - 86, 7, 86);
+			this.backgroundGraphics.fillStyle(0x4b5568, 1);
+			this.backgroundGraphics.fillRect(lightX - 14, FOOTPATH_Y - 86, 28, 5);
+			this.backgroundGraphics.fillStyle(0xffd783, 0.95);
+			this.backgroundGraphics.fillCircle(lightX, FOOTPATH_Y - 79, 8);
+			this.backgroundGraphics.fillStyle(0xffd783, 0.12);
+			this.backgroundGraphics.fillTriangle(
+				lightX - 46,
+				FOOTPATH_Y + 6,
+				lightX + 46,
+				FOOTPATH_Y + 6,
+				lightX,
+				FOOTPATH_Y - 54,
+			);
 		}
 
 		this.backgroundGraphics.fillStyle(0x111827, 1);

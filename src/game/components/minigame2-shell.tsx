@@ -69,7 +69,7 @@ export default function Minigame2Shell() {
 									<div className="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:justify-center">
 										<button
 											type="button"
-											onClick={() => gameEventBus.emit(GAME_EVENTS.RESTART_GAME, {})}
+											onClick={() => gameEventBus.emit(GAME_EVENTS.RESTART_GAME, { sceneKey: "minigame2" })}
 											className="rounded-full bg-amber-300 px-5 py-3 text-sm font-semibold text-slate-950 transition-transform hover:-translate-y-0.5"
 										>
 											Restart Minigame

@@ -15,7 +15,9 @@ type GameEventMap = {
 		elapsedMs: number;
 		message: string;
 	};
-	"restart-game": Record<string, never>;
+	"restart-game": {
+		sceneKey: string;
+	};
 	"action-press": {
 		active: boolean;
 	};
