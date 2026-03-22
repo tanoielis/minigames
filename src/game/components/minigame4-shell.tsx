@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ActionButtonControl from "@/game/components/action-button-control";
@@ -22,24 +22,35 @@ function formatSeconds(value: number) {
 
 export default function Minigame4Shell() {
 	const pathname = usePathname();
+	const isRouteActive = pathname === "/minigame4";
 	const [gameState, setGameState] = useState<GameStateEvent>(initialState);
 	const [sessionKey, setSessionKey] = useState(0);
+	const activeInstanceIdRef = useRef<string | null>(null);
 
 	useEffect(() => {
+		if (isRouteActive) {
+			activeInstanceIdRef.current = null;
+			setGameState(initialState);
+			setSessionKey((current) => current + 1);
+			return;
+		}
+
+		activeInstanceIdRef.current = null;
 		setGameState(initialState);
-		setSessionKey((current) => current + 1);
-	}, [pathname]);
+	}, [isRouteActive, pathname]);
 
 	useEffect(() => {
+		activeInstanceIdRef.current = null;
 		setGameState(initialState);
 
 		const unsubscribeState = gameEventBus.on(GAME_EVENTS.GAME_STATE, (payload) => {
-			if (payload.sceneKey === "Minigame 4") {
+			if (payload.sceneKey === "Minigame 4" && payload.instanceId === activeInstanceIdRef.current) {
 				setGameState(payload);
 			}
 		});
-		const unsubscribeReady = gameEventBus.on(GAME_EVENTS.SCENE_READY, ({ sceneKey }) => {
+		const unsubscribeReady = gameEventBus.on(GAME_EVENTS.SCENE_READY, ({ sceneKey, instanceId }) => {
 			if (sceneKey === "Minigame 4") {
+				activeInstanceIdRef.current = instanceId ?? null;
 				setGameState(initialState);
 			}
 		});
@@ -73,7 +84,7 @@ export default function Minigame4Shell() {
 					</div>
 
 					<div className="relative min-h-0 flex-1">
-						<PhaserGame key={sessionKey} startSceneKey="minigame4" />
+						{isRouteActive ? <PhaserGame key={sessionKey} startSceneKey="minigame4" /> : null}
 
 						{isFinished ? (
 							<div className="absolute inset-0 flex items-center justify-center rounded-[1.5rem] bg-slate-950/72 p-4 backdrop-blur-sm sm:p-6">
@@ -106,7 +117,7 @@ export default function Minigame4Shell() {
 				</main>
 			</div>
 
-			<ActionButtonControl disabled={isFinished || gameState.status === "booting"} label="Action" />
+			<ActionButtonControl disabled={!isRouteActive || isFinished || gameState.status === "booting"} label="Action" />
 		</>
 	);
 }

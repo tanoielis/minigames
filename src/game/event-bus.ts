@@ -1,6 +1,7 @@
 type GameEventMap = {
 	"scene-ready": {
 		sceneKey: string;
+		instanceId?: string;
 	};
 	"minigame3-layout": {
 		endpoints: Array<{
@@ -35,6 +36,7 @@ type GameEventMap = {
 	};
 	"game-state": {
 		sceneKey: string;
+		instanceId?: string;
 		status: "booting" | "playing" | "won" | "lost";
 		remainingChunks: number;
 		totalChunks: number;

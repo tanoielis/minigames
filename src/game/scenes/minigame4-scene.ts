@@ -55,6 +55,7 @@ function clampLaneSpeed(value: number) {
 
 export class Minigame4Scene extends Phaser.Scene {
 	private readonly riderBaseScale = 96 / 876;
+	private instanceId = "";
 	private cleanupListeners: Array<() => void> = [];
 	private backgroundGraphics?: Phaser.GameObjects.Graphics;
 	private trafficGraphics?: Phaser.GameObjects.Graphics;
@@ -69,7 +70,7 @@ export class Minigame4Scene extends Phaser.Scene {
 	private roadOffset = 0;
 	private laneStates: LaneState[] = [];
 	private nextVehicleId = 0;
-	private roundStartTime = 0;
+	private roundElapsedMs = 0;
 	private gameStatus: "booting" | "playing" | "won" | "lost" = "booting";
 
 	constructor() {
@@ -77,11 +78,12 @@ export class Minigame4Scene extends Phaser.Scene {
 	}
 
 	create() {
+		this.instanceId = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 		this.cameras.main.setBackgroundColor("#050711");
 		this.setupEventBridge();
 		this.createWorld();
+		gameEventBus.emit(GAME_EVENTS.SCENE_READY, { sceneKey: "Minigame 4", instanceId: this.instanceId });
 		this.startRound();
-		gameEventBus.emit(GAME_EVENTS.SCENE_READY, { sceneKey: "Minigame 4" });
 	}
 
 	update(_time: number, delta: number) {
@@ -94,14 +96,25 @@ export class Minigame4Scene extends Phaser.Scene {
 		this.roadOffset += PLAYER_FORWARD_SCROLL_SPEED * dt;
 
 		this.updatePlayer(dt);
+		if (this.gameStatus !== "playing") {
+			return;
+		}
+
 		this.updateLanes(dt);
+		if (this.gameStatus !== "playing") {
+			return;
+		}
+
+		this.roundElapsedMs += delta;
 		this.redrawWorld();
 		this.updateBikePose();
-		this.emitProgress();
 
-		if (this.time.now - this.roundStartTime >= SURVIVAL_TIME_MS) {
+		if (this.roundElapsedMs >= SURVIVAL_TIME_MS) {
 			this.endRound("won", "You stayed ahead of the traffic wave for the full twenty seconds.");
+			return;
 		}
+
+		this.emitProgress();
 	}
 
 	private setupEventBridge() {
@@ -146,7 +159,7 @@ export class Minigame4Scene extends Phaser.Scene {
 
 	private startRound() {
 		this.gameStatus = "playing";
-		this.roundStartTime = this.time.now;
+		this.roundElapsedMs = 0;
 		this.actionPressed = false;
 		this.actionConsumed = false;
 		this.steerDirection = Phaser.Math.Between(0, 1) === 0 ? -1 : 1;
@@ -431,16 +444,16 @@ export class Minigame4Scene extends Phaser.Scene {
 	}
 
 	private emitProgress() {
-		const elapsedMs = Math.max(0, this.time.now - this.roundStartTime);
-		const remainingMs = Math.max(0, SURVIVAL_TIME_MS - elapsedMs);
+		const remainingMs = Math.max(0, SURVIVAL_TIME_MS - this.roundElapsedMs);
 		const directionLabel = this.steerDirection < 0 ? "left" : "right";
 		this.emitState(`Traffic is closing in. Survive ${Math.ceil(remainingMs / 1000)}s more and keep drifting ${directionLabel}.`);
 	}
 
 	private emitState(message: string) {
-		const elapsedMs = Math.max(0, this.time.now - this.roundStartTime);
+		const elapsedMs = Math.max(0, this.roundElapsedMs);
 		gameEventBus.emit(GAME_EVENTS.GAME_STATE, {
 			sceneKey: "Minigame 4",
+			instanceId: this.instanceId,
 			status: this.gameStatus,
 			remainingChunks: Math.max(0, Math.ceil((SURVIVAL_TIME_MS - elapsedMs) / 1000)),
 			totalChunks: Math.ceil(SURVIVAL_TIME_MS / 1000),
