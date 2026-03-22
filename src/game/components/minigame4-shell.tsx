@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import ActionButtonControl from "@/game/components/action-button-control";
 import PhaserGame from "@/game/components/phaser-game";
 import { GAME_EVENTS, gameEventBus, type GameStateEvent } from "@/game/event-bus";
@@ -20,16 +21,33 @@ function formatSeconds(value: number) {
 }
 
 export default function Minigame4Shell() {
+	const pathname = usePathname();
 	const [gameState, setGameState] = useState<GameStateEvent>(initialState);
+	const [sessionKey, setSessionKey] = useState(0);
 
 	useEffect(() => {
-		const unsubscribe = gameEventBus.on(GAME_EVENTS.GAME_STATE, (payload) => {
+		setGameState(initialState);
+		setSessionKey((current) => current + 1);
+	}, [pathname]);
+
+	useEffect(() => {
+		setGameState(initialState);
+
+		const unsubscribeState = gameEventBus.on(GAME_EVENTS.GAME_STATE, (payload) => {
 			if (payload.sceneKey === "Minigame 4") {
 				setGameState(payload);
 			}
 		});
+		const unsubscribeReady = gameEventBus.on(GAME_EVENTS.SCENE_READY, ({ sceneKey }) => {
+			if (sceneKey === "Minigame 4") {
+				setGameState(initialState);
+			}
+		});
 
-		return unsubscribe;
+		return () => {
+			unsubscribeState();
+			unsubscribeReady();
+		};
 	}, []);
 
 	const isFinished = gameState.status === "won" || gameState.status === "lost";
@@ -43,7 +61,7 @@ export default function Minigame4Shell() {
 							<p className="text-xs uppercase tracking-[0.3em] text-cyan-300/70">CYBER Minigames</p>
 							<h1 className="mt-1 text-2xl font-semibold text-cyan-100 sm:mt-2 sm:text-4xl">Neon Rider</h1>
 							<p className="mt-2 max-w-2xl text-xs text-slate-300 sm:text-sm">
-								Traffic floods down a three-lane neon highway. Tap the action button to flip your drift and survive for twenty-four seconds.
+								Traffic floods down a three-lane neon highway. Tap the action button to flip your drift and survive for twenty seconds.
 							</p>
 						</div>
 						<Link
@@ -55,7 +73,7 @@ export default function Minigame4Shell() {
 					</div>
 
 					<div className="relative min-h-0 flex-1">
-						<PhaserGame startSceneKey="minigame4" />
+						<PhaserGame key={sessionKey} startSceneKey="minigame4" />
 
 						{isFinished ? (
 							<div className="absolute inset-0 flex items-center justify-center rounded-[1.5rem] bg-slate-950/72 p-4 backdrop-blur-sm sm:p-6">

@@ -23,13 +23,23 @@ export default function Minigame2Shell() {
 	const [gameState, setGameState] = useState<GameStateEvent>(initialState);
 
 	useEffect(() => {
-		const unsubscribe = gameEventBus.on(GAME_EVENTS.GAME_STATE, (payload) => {
+		setGameState(initialState);
+
+		const unsubscribeState = gameEventBus.on(GAME_EVENTS.GAME_STATE, (payload) => {
 			if (payload.sceneKey === "Minigame 2") {
 				setGameState(payload);
 			}
 		});
+		const unsubscribeReady = gameEventBus.on(GAME_EVENTS.SCENE_READY, ({ sceneKey }) => {
+			if (sceneKey === "Minigame 2") {
+				setGameState((current) => (current.status === "won" || current.status === "lost" ? initialState : current));
+			}
+		});
 
-		return unsubscribe;
+		return () => {
+			unsubscribeState();
+			unsubscribeReady();
+		};
 	}, []);
 
 	const isFinished = gameState.status === "won" || gameState.status === "lost";

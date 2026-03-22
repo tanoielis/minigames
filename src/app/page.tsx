@@ -23,7 +23,7 @@ const minigames = [
 	{
 		slug: "minigame4",
 		title: "Neon Rider",
-		description: "Flip your drift direction and weave through three-lane traffic for twenty-four seconds on a vertical cyber highway.",
+		description: "Flip your drift direction and weave through three-lane traffic for twenty seconds on a vertical cyber highway.",
 		thumbnail: "/minigames/minigame4-thumbnail.svg",
 	},
 ];

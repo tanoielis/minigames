@@ -20,6 +20,7 @@ const JUMP_VELOCITY = -680;
 const FOOTPATH_Y = GROUND_Y - 74;
 
 export class Minigame2Scene extends Phaser.Scene {
+	private readonly skaterBaseScale = 86 / 395;
 	private cleanupListeners: Array<() => void> = [];
 	private actionPressed = false;
 	private jumpQueued = false;
@@ -35,7 +36,7 @@ export class Minigame2Scene extends Phaser.Scene {
 	private roadGraphics?: Phaser.GameObjects.Graphics;
 	private backgroundGraphics?: Phaser.GameObjects.Graphics;
 	private skaterShadow?: Phaser.GameObjects.Ellipse;
-	private skater?: Phaser.GameObjects.Container;
+	private skater?: Phaser.GameObjects.Image;
 
 	constructor() {
 		super("minigame2");
@@ -112,6 +113,8 @@ export class Minigame2Scene extends Phaser.Scene {
 	private createWorld() {
 		this.backgroundGraphics = this.add.graphics();
 		this.roadGraphics = this.add.graphics();
+		this.backgroundGraphics.setDepth(0);
+		this.roadGraphics.setDepth(1);
 
 		this.add
 			.text(this.scale.width / 2, 44, "SKATER CITY", {
@@ -121,16 +124,9 @@ export class Minigame2Scene extends Phaser.Scene {
 			})
 			.setOrigin(0.5);
 
-		const board = this.add.rectangle(0, 28, 78, 12, 0xf59e0b, 1);
-		const body = this.add.rectangle(0, -8, 22, 54, 0xcbd5e1, 1);
-		const head = this.add.circle(0, -50, 15, 0xffe6b5, 1);
-		const backLeg = this.add.rectangle(-12, 26, 10, 34, 0x60a5fa, 1);
-		const frontLeg = this.add.rectangle(12, 26, 10, 34, 0x2563eb, 1);
-		const leftWheel = this.add.circle(-22, 34, 8, 0x111827, 1);
-		const rightWheel = this.add.circle(22, 34, 8, 0x111827, 1);
-
-		this.skater = this.add.container(SKATER_X, GROUND_Y - 18, [board, backLeg, frontLeg, body, head, leftWheel, rightWheel]);
-		this.skaterShadow = this.add.ellipse(SKATER_X, GROUND_Y + 18, 82, 18, 0x000000, 0.25);
+		this.skater = this.add.image(SKATER_X, GROUND_Y - 26, "skater-sprite").setScale(this.skaterBaseScale);
+		this.skaterShadow = this.add.ellipse(SKATER_X, GROUND_Y + 18, 96, 22, 0xFFFFFF, 0.25).setDepth(2);
+		this.skater.setDepth(3);
 	}
 
 	private startRound() {
@@ -294,9 +290,10 @@ export class Minigame2Scene extends Phaser.Scene {
 		const airborne = !this.isGrounded();
 		this.skater.y = this.skaterY - 18;
 		this.skater.rotation = Phaser.Math.Clamp(this.skaterVelocityY / -1900, -0.28, 0.22);
-		this.skater.scaleY = airborne ? 1.03 : 1;
-		this.skaterShadow.scaleX = airborne ? 0.72 : 1;
-		this.skaterShadow.alpha = airborne ? 0.16 : 0.25;
+		this.skater.setScale(this.skaterBaseScale, this.skaterBaseScale * (airborne ? 1.03 : 1));
+		this.skaterShadow.scaleX = airborne ? 0.78 : 1;
+		this.skaterShadow.scaleY = airborne ? 0.82 : 1;
+		this.skaterShadow.alpha = airborne ? 0.22 : 0.32;
 	}
 
 	private emitProgress() {

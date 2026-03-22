@@ -27,7 +27,7 @@ type LaneState = {
 	vehicles: TrafficVehicle[];
 };
 
-const SURVIVAL_TIME_MS = 24_000;
+const SURVIVAL_TIME_MS = 20_000;
 const HIGHWAY_LEFT = 180;
 const HIGHWAY_RIGHT = 780;
 const HIGHWAY_WIDTH = HIGHWAY_RIGHT - HIGHWAY_LEFT;
@@ -41,9 +41,9 @@ const PLAYER_HEIGHT = 120;
 const PLAYER_ACCELERATION = 350;
 const PLAYER_MAX_SPEED = 210;
 const PLAYER_FORWARD_SCROLL_SPEED = 410;
-const PLAYER_EDGE_MARGIN = 42;
 const MIN_LANE_SPEED = 155;
 const MAX_LANE_SPEED = 255;
+const OFFSCREEN_SPAWN_MARGIN = 48;
 
 function laneCenterX(index: number) {
 	return HIGHWAY_LEFT + LANE_WIDTH * index + LANE_WIDTH / 2;
@@ -54,11 +54,12 @@ function clampLaneSpeed(value: number) {
 }
 
 export class Minigame4Scene extends Phaser.Scene {
+	private readonly riderBaseScale = 96 / 876;
 	private cleanupListeners: Array<() => void> = [];
 	private backgroundGraphics?: Phaser.GameObjects.Graphics;
 	private trafficGraphics?: Phaser.GameObjects.Graphics;
 	private bikeShadow?: Phaser.GameObjects.Ellipse;
-	private bike?: Phaser.GameObjects.Container;
+	private bike?: Phaser.GameObjects.Image;
 	private actionPressed = false;
 	private actionConsumed = false;
 	private steerDirection: -1 | 1 = 1;
@@ -99,7 +100,7 @@ export class Minigame4Scene extends Phaser.Scene {
 		this.emitProgress();
 
 		if (this.time.now - this.roundStartTime >= SURVIVAL_TIME_MS) {
-			this.endRound("won", "You stayed ahead of the traffic wave for the full twenty-four seconds.");
+			this.endRound("won", "You stayed ahead of the traffic wave for the full twenty seconds.");
 		}
 	}
 
@@ -139,18 +140,8 @@ export class Minigame4Scene extends Phaser.Scene {
 		this.backgroundGraphics = this.add.graphics();
 		this.trafficGraphics = this.add.graphics();
 
-		const bikeGlow = this.add.ellipse(0, 10, 88, 34, 0x22d3ee, 0.22);
-		const rearWheel = this.add.circle(-18, 26, 12, 0x070b16, 1);
-		const frontWheel = this.add.circle(18, 22, 11, 0x070b16, 1);
-		const rearGlow = this.add.circle(-18, 26, 8, 0xf472b6, 0.75);
-		const frontGlow = this.add.circle(18, 22, 7, 0x22d3ee, 0.82);
-		const frame = this.add.rectangle(0, 0, 18, 64, 0x7dd3fc, 1);
-		const chassis = this.add.polygon(0, -6, [-24, 14, -6, -26, 12, -18, 26, 10, 4, 24], 0xf472b6, 1);
-		const canopy = this.add.polygon(2, -20, [-16, 14, 0, -16, 14, 8], 0xe0f2fe, 0.95);
-		const tail = this.add.rectangle(0, 34, 42, 10, 0xfb7185, 1);
-
-		this.bike = this.add.container(this.playerX, PLAYER_Y, [bikeGlow, rearWheel, frontWheel, rearGlow, frontGlow, frame, chassis, canopy, tail]);
-		this.bikeShadow = this.add.ellipse(this.playerX, PLAYER_Y + 44, 108, 30, 0x020617, 0.42);
+		this.bike = this.add.image(this.playerX, PLAYER_Y + 2, "rider-sprite").setScale(this.riderBaseScale);
+		this.bikeShadow = this.add.ellipse(this.playerX, PLAYER_Y + 42, 84, 24, 0xFFFFFF, 0.25);
 	}
 
 	private startRound() {
@@ -200,17 +191,20 @@ export class Minigame4Scene extends Phaser.Scene {
 		this.playerVelocityX = Phaser.Math.Clamp(this.playerVelocityX, -PLAYER_MAX_SPEED, PLAYER_MAX_SPEED);
 		this.playerX += this.playerVelocityX * dt;
 
-		const leftLimit = HIGHWAY_LEFT + PLAYER_EDGE_MARGIN;
-		const rightLimit = HIGHWAY_RIGHT - PLAYER_EDGE_MARGIN;
+		const playerHalfWidth = PLAYER_WIDTH / 2;
+		const leftLimit = HIGHWAY_LEFT + playerHalfWidth;
+		const rightLimit = HIGHWAY_RIGHT - playerHalfWidth;
 
 		if (this.playerX <= leftLimit) {
 			this.playerX = leftLimit;
-			this.playerVelocityX = Math.max(0, this.playerVelocityX) * 0.2;
+			this.endRound("lost", "You clipped the highway barrier. Flip direction sooner to stay inside the road.");
+			return;
 		}
 
 		if (this.playerX >= rightLimit) {
 			this.playerX = rightLimit;
-			this.playerVelocityX = Math.min(0, this.playerVelocityX) * 0.2;
+			this.endRound("lost", "You clipped the highway barrier. Flip direction sooner to stay inside the road.");
+			return;
 		}
 	}
 
@@ -226,7 +220,9 @@ export class Minigame4Scene extends Phaser.Scene {
 			lane.spawnTimer -= dt;
 
 			if (lane.spawnTimer <= 0 && this.canSpawnVehicle(lane)) {
-				lane.vehicles.push(this.createVehicle(lane, this.getSpawnY(lane)));
+				const vehicle = this.createVehicle(lane, 0);
+				vehicle.y = this.getSpawnY(lane, vehicle.height);
+				lane.vehicles.push(vehicle);
 				lane.spawnTimer = Phaser.Math.FloatBetween(1.2, 1.9);
 				lane.nextSpawnGap = Phaser.Math.Between(220, 340);
 			}
@@ -265,7 +261,7 @@ export class Minigame4Scene extends Phaser.Scene {
 		return frontVehicleTop > lane.nextSpawnGap;
 	}
 
-	private getSpawnY(lane: LaneState) {
+	private getSpawnY(lane: LaneState, vehicleHeight: number) {
 		const frontVehicle = lane.vehicles.reduce<TrafficVehicle | undefined>((closest, vehicle) => {
 			if (!closest || vehicle.y < closest.y) {
 				return vehicle;
@@ -273,12 +269,15 @@ export class Minigame4Scene extends Phaser.Scene {
 
 			return closest;
 		}, undefined);
+		const maxSpawnY = -vehicleHeight / 2 - OFFSCREEN_SPAWN_MARGIN;
 
 		if (!frontVehicle) {
-			return Phaser.Math.Between(-280, -160);
+			return Phaser.Math.Between(-vehicleHeight - 220, maxSpawnY);
 		}
 
-		return frontVehicle.y - frontVehicle.height / 2 - lane.nextSpawnGap;
+		const frontVehicleTop = frontVehicle.y - frontVehicle.height / 2;
+		const spacedSpawnY = frontVehicleTop - lane.nextSpawnGap - vehicleHeight / 2;
+		return Math.min(maxSpawnY, spacedSpawnY);
 	}
 
 	private createVehicle(lane: LaneState, y: number): TrafficVehicle {
@@ -423,8 +422,9 @@ export class Minigame4Scene extends Phaser.Scene {
 		}
 
 		this.bike.x = this.playerX;
-		this.bike.y = PLAYER_Y;
+		this.bike.y = PLAYER_Y + 2;
 		this.bike.rotation = Phaser.Math.Clamp(this.playerVelocityX / PLAYER_MAX_SPEED, -1, 1) * 0.34;
+		this.bike.setScale(this.riderBaseScale, this.riderBaseScale * 1.02);
 		this.bikeShadow.x = this.playerX;
 		this.bikeShadow.scaleX = 1 - Math.abs(this.playerVelocityX / PLAYER_MAX_SPEED) * 0.18;
 		this.bikeShadow.alpha = 0.28 + Math.abs(this.playerVelocityX / PLAYER_MAX_SPEED) * 0.08;
