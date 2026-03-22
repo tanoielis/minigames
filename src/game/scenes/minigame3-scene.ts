@@ -106,7 +106,7 @@ export class Minigame3Scene extends Phaser.Scene {
 	private roundNumber = 0;
 	private nextWireColorIndex = 0;
 	private prompt?: PromptState;
-	private roundStartTime = 0;
+	private roundElapsedMs = 0;
 	private gameStatus: "booting" | "playing" | "won" | "lost" = "booting";
 	private awaitingInput = false;
 	private promptTimer?: Phaser.Time.TimerEvent;
@@ -122,6 +122,14 @@ export class Minigame3Scene extends Phaser.Scene {
 		this.buildBackdrop();
 		this.startGame();
 		gameEventBus.emit(GAME_EVENTS.SCENE_READY, { sceneKey: "Minigame 3" });
+	}
+
+	update(_time: number, delta: number) {
+		if (this.gameStatus !== "playing") {
+			return;
+		}
+
+		this.roundElapsedMs += delta;
 	}
 
 	private setupEventBridge() {
@@ -168,7 +176,7 @@ export class Minigame3Scene extends Phaser.Scene {
 	private startGame() {
 		this.roundNumber = 0;
 		this.nextWireColorIndex = 0;
-		this.roundStartTime = this.time.now;
+		this.roundElapsedMs = 0;
 		this.startNextRound();
 	}
 
@@ -402,7 +410,7 @@ export class Minigame3Scene extends Phaser.Scene {
 			status: this.gameStatus,
 			remainingChunks: Math.max(0, TOTAL_ROUNDS - this.roundNumber + (this.gameStatus === "playing" ? 1 : 0)),
 			totalChunks: TOTAL_ROUNDS,
-			elapsedMs: Math.max(0, this.time.now - this.roundStartTime),
+			elapsedMs: this.roundElapsedMs,
 			message,
 		});
 	}

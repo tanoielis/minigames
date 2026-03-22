@@ -60,7 +60,7 @@ export class Minigame1Scene extends Phaser.Scene {
 	private nextSinkAt = 0;
 	private nextWindShiftAt = 0;
 	private warningChunkId: number | null = null;
-	private roundStartTime = 0;
+	private roundElapsedMs = 0;
 	private hudLastEmittedAt = 0;
 	private gameStatus: "booting" | "playing" | "won" | "lost" = "booting";
 	private cleanupListeners: Array<() => void> = [];
@@ -86,6 +86,8 @@ export class Minigame1Scene extends Phaser.Scene {
 		if (this.gameStatus !== "playing") {
 			return;
 		}
+
+		this.roundElapsedMs += delta;
 
 		this.updateWind(time, delta);
 		this.updateWarningChunk(time);
@@ -149,7 +151,7 @@ export class Minigame1Scene extends Phaser.Scene {
 		this.chunks = [];
 		this.warningChunkId = null;
 		this.gameStatus = "playing";
-		this.roundStartTime = this.time.now;
+		this.roundElapsedMs = 0;
 		this.hudLastEmittedAt = 0;
 		this.playerVelocity.set(0, 0);
 		this.inputVector.set(0, 0);
@@ -426,7 +428,7 @@ export class Minigame1Scene extends Phaser.Scene {
 			status: this.gameStatus,
 			remainingChunks: this.getActiveChunkCount(),
 			totalChunks: TOTAL_CHUNKS,
-			elapsedMs: Math.max(0, this.time.now - this.roundStartTime),
+			elapsedMs: this.roundElapsedMs,
 			message,
 		});
 	}

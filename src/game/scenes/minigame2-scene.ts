@@ -26,7 +26,7 @@ export class Minigame2Scene extends Phaser.Scene {
 	private jumpQueued = false;
 	private jumpConsumed = false;
 	private gameStatus: "booting" | "playing" | "won" | "lost" = "booting";
-	private roundStartTime = 0;
+	private roundElapsedMs = 0;
 	private holes: Hole[] = [];
 	private skaterY = GROUND_Y;
 	private skaterVelocityY = 0;
@@ -54,6 +54,8 @@ export class Minigame2Scene extends Phaser.Scene {
 		if (this.gameStatus !== "playing") {
 			return;
 		}
+
+		this.roundElapsedMs += delta;
 
 		const dt = delta / 1000;
 		this.trackOffset += RUN_SPEED * dt;
@@ -131,7 +133,7 @@ export class Minigame2Scene extends Phaser.Scene {
 
 	private startRound() {
 		this.gameStatus = "playing";
-		this.roundStartTime = this.time.now;
+		this.roundElapsedMs = 0;
 		this.actionPressed = false;
 		this.jumpQueued = false;
 		this.jumpConsumed = false;
@@ -307,7 +309,7 @@ export class Minigame2Scene extends Phaser.Scene {
 			status: this.gameStatus,
 			remainingChunks: TOTAL_HOLES - this.holes.filter((hole) => hole.cleared).length,
 			totalChunks: TOTAL_HOLES,
-			elapsedMs: Math.max(0, this.time.now - this.roundStartTime),
+			elapsedMs: this.roundElapsedMs,
 			message,
 		});
 	}
