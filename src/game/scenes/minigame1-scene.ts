@@ -28,7 +28,7 @@ const WIND_GRID_SPACING_Y = 72;
 const WIND_GRID_MARGIN_X = 96;
 const WIND_GRID_TOP = 92;
 const WIND_GRID_BOTTOM_OFFSET = 86;
-const WIND_FORCE_MULTIPLIER = 3.6;
+const WIND_FORCE_MULTIPLIER = 5;
 
 function mixColor(start: number, end: number, amount: number) {
 	const clamped = Phaser.Math.Clamp(amount, 0, 1);
