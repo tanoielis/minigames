@@ -51,6 +51,7 @@ export class PreloadScene extends Phaser.Scene {
 		this.load.image("minigame4-thumb", "/minigames/minigame4-thumbnail.svg");
 		this.load.image("minigame5-thumb", "/minigames/minigame5-thumbnail.svg");
 		this.load.image("minigame6-thumb", "/minigames/minigame6-thumbnail.svg");
+		this.load.image("minigame7-thumb", "/minigames/minigame7-thumbnail.svg");
 		this.load.image("skater-sprite", "/minigames/skater.png");
 		this.load.image("rider-sprite", "/minigames/rider.png");
 		this.load.image("player-knight-sprite", "/minigames/player-knight.png");
@@ -59,6 +60,11 @@ export class PreloadScene extends Phaser.Scene {
 		this.load.image("dark-boxer-hit", "/minigames/dark-boxer-hit.png");
 		this.load.image("light-boxer", "/minigames/light-boxer.png");
 		this.load.image("light-boxer-hit", "/minigames/light-boxer-hit.png");
+		this.load.image("minigame7-explosion", "/minigames/minigame7/explosion.png");
+		this.load.image("minigame7-plane1", "/minigames/minigame7/plane1.png");
+		this.load.image("minigame7-plane2", "/minigames/minigame7/plane2.png");
+		this.load.image("minigame7-plane3", "/minigames/minigame7/plane3.png");
+		this.load.image("minigame7-plane4", "/minigames/minigame7/plane4.png");
 		this.load.image("next-mark", "/next.svg");
 		this.load.image("globe-icon", "/globe.svg");
 		this.load.image("file-icon", "/file.svg");

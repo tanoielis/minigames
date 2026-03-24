@@ -1,0 +1,22 @@
+<svg width="960" height="600" viewBox="0 0 960 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="600" fill="#67C8FF"/>
+  <rect width="960" height="600" fill="url(#paint0_linear)"/>
+  <ellipse cx="182" cy="118" rx="122" ry="44" fill="white" fill-opacity="0.3"/>
+  <ellipse cx="240" cy="136" rx="84" ry="30" fill="white" fill-opacity="0.24"/>
+  <ellipse cx="684" cy="154" rx="132" ry="48" fill="white" fill-opacity="0.28"/>
+  <ellipse cx="760" cy="174" rx="96" ry="34" fill="white" fill-opacity="0.22"/>
+  <ellipse cx="516" cy="454" rx="288" ry="102" fill="#0E5C9A" fill-opacity="0.18"/>
+  <path d="M512 122L564 198L536 222L560 310L512 286L464 310L488 222L460 198L512 122Z" fill="#F8FBFF"/>
+  <path d="M512 154L540 204L524 218L540 274L512 258L484 274L500 218L484 204L512 154Z" fill="#38BDF8"/>
+  <circle cx="328" cy="352" r="38" fill="#FB923C" fill-opacity="0.92"/>
+  <circle cx="328" cy="352" r="24" fill="#FDE68A" fill-opacity="0.8"/>
+  <path d="M734 214L780 278L754 298L774 372L734 348L694 372L714 298L688 278L734 214Z" fill="#0F172A" fill-opacity="0.92"/>
+  <path d="M258 258L302 322L278 340L296 406L258 384L220 406L238 340L214 322L258 258Z" fill="#1E3A8A" fill-opacity="0.84"/>
+  <defs>
+    <linearGradient id="paint0_linear" x1="480" y1="0" x2="480" y2="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B6E7FF" stop-opacity="0.42"/>
+      <stop offset="0.45" stop-color="#53A8E0" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#082F49" stop-opacity="0.68"/>
+    </linearGradient>
+  </defs>
+</svg>

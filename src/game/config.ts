@@ -5,6 +5,7 @@ import { Minigame3Scene } from "@/game/scenes/minigame3-scene";
 import { Minigame4Scene } from "@/game/scenes/minigame4-scene";
 import { Minigame5Scene } from "@/game/scenes/minigame5-scene";
 import { Minigame6Scene } from "@/game/scenes/minigame6-scene";
+import { Minigame7Scene } from "@/game/scenes/minigame7-scene";
 import { PreloadScene } from "@/game/scenes/preload-scene";
 
 export function createGameConfig(parent: HTMLDivElement, startSceneKey: string): Phaser.Types.Core.GameConfig {
@@ -22,7 +23,7 @@ export function createGameConfig(parent: HTMLDivElement, startSceneKey: string):
 			mode: Phaser.Scale.FIT,
 			autoCenter: Phaser.Scale.CENTER_BOTH,
 		},
-		scene: [PreloadScene, Minigame1Scene, Minigame2Scene, Minigame3Scene, Minigame4Scene, Minigame5Scene, Minigame6Scene],
+		scene: [PreloadScene, Minigame1Scene, Minigame2Scene, Minigame3Scene, Minigame4Scene, Minigame5Scene, Minigame6Scene, Minigame7Scene],
 		callbacks: {
 			preBoot: (game) => {
 				game.registry.set("startSceneKey", startSceneKey);

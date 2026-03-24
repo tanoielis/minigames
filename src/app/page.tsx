@@ -38,6 +38,12 @@ const minigames = [
 		description: "Work behind the jab, block the telegraphed shots, and survive three short rounds or score the knockout.",
 		thumbnail: "/minigames/minigame6-thumbnail.svg",
 	},
+	{
+		slug: "minigame7",
+		title: "Cloud Run",
+		description: "Bank through open sky, dodge hostile planes, and survive twenty seconds above the ocean.",
+		thumbnail: "/minigames/minigame7-thumbnail.svg",
+	},
 ];
 
 export default function Home() {
@@ -61,7 +67,7 @@ export default function Home() {
 						</div>
 					</div>
 
-					<div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-6">
+					<div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
 						{minigames.map((game) => (
 							<Link
 								key={game.slug}

@@ -61,6 +61,16 @@ type GameEventMap = {
 		hookDisabled: boolean;
 		blockDisabled: boolean;
 	};
+	"minigame7-turn": {
+		left: boolean;
+		right: boolean;
+	};
+	"minigame7-boost": {
+		active: boolean;
+	};
+	"minigame7-controls": {
+		boostDisabled: boolean;
+	};
 };
 
 type GameEventName = keyof GameEventMap;
@@ -95,6 +105,9 @@ export const GAME_EVENTS = {
 	ACTION_PRESS: "action-press",
 	BOXING_ACTION: "boxing-action",
 	MINIGAME6_CONTROLS: "minigame6-controls",
+	MINIGAME7_TURN: "minigame7-turn",
+	MINIGAME7_BOOST: "minigame7-boost",
+	MINIGAME7_CONTROLS: "minigame7-controls",
 } as const;
 
 export type GameStateEvent = GameEventMap[typeof GAME_EVENTS.GAME_STATE];
