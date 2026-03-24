@@ -41,6 +41,7 @@ type GameEventMap = {
 		remainingChunks: number;
 		totalChunks: number;
 		elapsedMs: number;
+		roundTimeMs?: number;
 		currentRound?: number;
 		playerScore?: number;
 		enemyScore?: number;
@@ -51,6 +52,14 @@ type GameEventMap = {
 	};
 	"action-press": {
 		active: boolean;
+	};
+	"boxing-action": {
+		action: "jab" | "hook" | "block";
+	};
+	"minigame6-controls": {
+		jabDisabled: boolean;
+		hookDisabled: boolean;
+		blockDisabled: boolean;
 	};
 };
 
@@ -84,6 +93,8 @@ export const GAME_EVENTS = {
 	GAME_STATE: "game-state",
 	RESTART_GAME: "restart-game",
 	ACTION_PRESS: "action-press",
+	BOXING_ACTION: "boxing-action",
+	MINIGAME6_CONTROLS: "minigame6-controls",
 } as const;
 
 export type GameStateEvent = GameEventMap[typeof GAME_EVENTS.GAME_STATE];
