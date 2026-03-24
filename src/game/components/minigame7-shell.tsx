@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import PhaserGame from "@/game/components/phaser-game";
 import PlaneTurnControls from "@/game/components/plane-turn-controls";
 import { GAME_EVENTS, gameEventBus, type GameStateEvent } from "@/game/event-bus";
+import { createShuffleHref, pickRandomMinigame } from "@/game/shuffle";
 
 const initialState: GameStateEvent = {
 	sceneKey: "Minigame 7",
@@ -19,7 +21,8 @@ function formatSeconds(value: number) {
 	return (value / 1000).toFixed(1);
 }
 
-export default function Minigame7Shell() {
+export default function Minigame7Shell({ shuffleMode = false }: { shuffleMode?: boolean }) {
+	const router = useRouter();
 	const [gameState, setGameState] = useState<GameStateEvent>(initialState);
 	const [boostDisabled, setBoostDisabled] = useState(true);
 
@@ -41,6 +44,7 @@ export default function Minigame7Shell() {
 
 	const isFinished = gameState.status === "won" || gameState.status === "lost";
 	const timeLeftMs = Math.max(0, 20_000 - gameState.elapsedMs);
+	const isShuffleRun = shuffleMode;
 
 	return (
 		<>
@@ -80,13 +84,23 @@ export default function Minigame7Shell() {
 									<p className="mt-3 text-sm text-sky-50/82">{gameState.message}</p>
 									<p className="mt-2 text-sm text-sky-100/65">Flight time: {formatSeconds(gameState.elapsedMs)}s</p>
 									<div className="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:justify-center">
-										<button
-											type="button"
-											onClick={() => gameEventBus.emit(GAME_EVENTS.RESTART_GAME, { sceneKey: "minigame7" })}
-											className="rounded-full bg-sky-100 px-5 py-3 text-sm font-semibold text-slate-950 transition-transform hover:-translate-y-0.5"
-										>
-											Restart Minigame
-										</button>
+										{isShuffleRun ? (
+											<button
+												type="button"
+												onClick={() => router.push(createShuffleHref(pickRandomMinigame("minigame7")))}
+												className="rounded-full bg-sky-100 px-5 py-3 text-sm font-semibold text-slate-950 transition-transform hover:-translate-y-0.5"
+											>
+												Next Game
+											</button>
+										) : (
+											<button
+												type="button"
+												onClick={() => gameEventBus.emit(GAME_EVENTS.RESTART_GAME, { sceneKey: "minigame7" })}
+												className="rounded-full bg-sky-100 px-5 py-3 text-sm font-semibold text-slate-950 transition-transform hover:-translate-y-0.5"
+											>
+												Restart Minigame
+											</button>
+										)}
 										<Link
 											href="/"
 											className="rounded-full border border-sky-100/35 px-5 py-3 text-sm font-semibold text-sky-50 transition-colors hover:bg-sky-100 hover:text-slate-950"

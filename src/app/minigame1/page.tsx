@@ -1,5 +1,10 @@
 import Minigame1Shell from "@/game/components/minigame1-shell";
 
-export default function Minigame1Page() {
-	return <Minigame1Shell />;
+export default async function Minigame1Page({
+	searchParams,
+}: {
+	searchParams: Promise<{ mode?: string }>;
+}) {
+	const params = await searchParams;
+	return <Minigame1Shell shuffleMode={params.mode === "shuffle"} />;
 }

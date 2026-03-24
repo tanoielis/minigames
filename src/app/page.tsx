@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Grid2x2, LayoutList, Minus, Plus } from "lucide-react";
+import { Grid2x2, LayoutList, Minus, Plus, Shuffle } from "lucide-react";
 import { useEffect, useState, type CSSProperties } from "react";
+import { useRouter } from "next/navigation";
+import { createShuffleHref, pickRandomMinigame } from "@/game/shuffle";
 
 const minigames = [
 	{
@@ -82,6 +84,7 @@ function IconButton({
 }
 
 export default function Home() {
+	const router = useRouter();
 	const [compactMode, setCompactMode] = useState(false);
 	const [mobileColumns, setMobileColumns] = useState(2);
 
@@ -111,8 +114,12 @@ export default function Home() {
 
 	const handleMobileColumns = (value: number) => {
 		const next = Math.min(MAX_MOBILE_COLUMNS, Math.max(MIN_MOBILE_COLUMNS, value));
-		setMobileColumns(value);
+		setMobileColumns(next);
 		window.localStorage.setItem(MOBILE_COLUMNS_KEY, String(next));
+	};
+
+	const handleShuffle = () => {
+		router.push(createShuffleHref(pickRandomMinigame()));
 	};
 
 	const gameCount = minigames.length;
@@ -137,6 +144,14 @@ export default function Home() {
 						</div>
 
 						<div className="flex items-center gap-3 rounded-[1.5rem] border border-cyan-100/10 bg-slate-950/36 p-3 sm:min-w-[20rem] sm:justify-end">
+							<button
+								type="button"
+								onClick={handleShuffle}
+								className="inline-flex items-center gap-2 rounded-full border border-[#8A00C4]/40 bg-[#8A00C4] px-4 py-3 text-sm font-semibold text-white shadow-[0_0_24px_rgba(138,0,196,0.32)] transition-transform hover:-translate-y-0.5"
+							>
+								<Shuffle className="h-4 w-4" />
+								Shuffle
+							</button>
 							<IconButton label={compactMode ? "Turn compact mode off" : "Turn compact mode on"} onClick={handleCompactMode} active={compactMode}>
 								{compactMode ? <LayoutList className="h-4 w-4" /> : <Grid2x2 className="h-4 w-4" />}
 							</IconButton>

@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import PhaserGame from "@/game/components/phaser-game";
 import { GAME_EVENTS, gameEventBus, type GameStateEvent } from "@/game/event-bus";
+import { createShuffleHref, pickRandomMinigame } from "@/game/shuffle";
 
 type ShapeKind =
 	| "circle"
@@ -106,7 +108,8 @@ function endpointPalette(state: LayoutEndpoint["state"]) {
 	};
 }
 
-export default function Minigame3Shell() {
+export default function Minigame3Shell({ shuffleMode = false }: { shuffleMode?: boolean }) {
+	const router = useRouter();
 	const [gameState, setGameState] = useState<GameStateEvent>(initialState);
 	const [endpoints, setEndpoints] = useState<LayoutEndpoint[]>([]);
 
@@ -127,6 +130,7 @@ export default function Minigame3Shell() {
 	}, []);
 
 	const isFinished = gameState.status === "won" || gameState.status === "lost";
+	const isShuffleRun = shuffleMode;
 
 	return (
 		<div className="h-dvh overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(244,114,182,0.14),_transparent_34%),linear-gradient(180deg,#140f1f_0%,#08070d_100%)] px-4 py-4 text-white sm:px-8 sm:py-6 lg:px-12">
@@ -189,13 +193,23 @@ export default function Minigame3Shell() {
 								<p className="mt-3 text-sm text-slate-300">{gameState.message}</p>
 								<p className="mt-2 text-sm text-slate-400">Elapsed time: {formatSeconds(gameState.elapsedMs)}s</p>
 								<div className="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:justify-center">
-									<button
-										type="button"
-										onClick={() => gameEventBus.emit(GAME_EVENTS.RESTART_GAME, { sceneKey: "minigame3" })}
-										className="rounded-full bg-pink-300 px-5 py-3 text-sm font-semibold text-slate-950 transition-transform hover:-translate-y-0.5"
-									>
-										Restart Minigame
-									</button>
+									{isShuffleRun ? (
+										<button
+											type="button"
+											onClick={() => router.push(createShuffleHref(pickRandomMinigame("minigame3")))}
+											className="rounded-full bg-pink-300 px-5 py-3 text-sm font-semibold text-slate-950 transition-transform hover:-translate-y-0.5"
+										>
+											Next Game
+										</button>
+									) : (
+										<button
+											type="button"
+											onClick={() => gameEventBus.emit(GAME_EVENTS.RESTART_GAME, { sceneKey: "minigame3" })}
+											className="rounded-full bg-pink-300 px-5 py-3 text-sm font-semibold text-slate-950 transition-transform hover:-translate-y-0.5"
+										>
+											Restart Minigame
+										</button>
+									)}
 									<Link
 										href="/"
 										className="rounded-full border border-pink-300/35 px-5 py-3 text-sm font-semibold text-pink-100 transition-colors hover:bg-pink-300 hover:text-slate-950"
