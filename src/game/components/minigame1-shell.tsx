@@ -50,7 +50,7 @@ export default function Minigame1Shell() {
 							href="/"
 							className="shrink-0 rounded-full border border-cyan-300/40 px-3 py-2 text-xs font-medium text-cyan-100 transition-colors hover:bg-cyan-300 hover:text-slate-950 sm:px-4 sm:text-sm"
 						>
-							Back to hub
+							Back to Menu
 						</Link>
 					</div>
 
@@ -78,7 +78,7 @@ export default function Minigame1Shell() {
 											href="/"
 											className="rounded-full border border-cyan-300/35 px-5 py-3 text-sm font-semibold text-cyan-100 transition-colors hover:bg-cyan-300 hover:text-slate-950"
 										>
-											Back to Main Page
+											Back to Menu
 										</Link>
 									</div>
 								</div>
