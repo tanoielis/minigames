@@ -52,6 +52,7 @@ export class PreloadScene extends Phaser.Scene {
 		this.load.image("minigame5-thumb", "/minigames/minigame5/thumbnail.svg");
 		this.load.image("minigame6-thumb", "/minigames/minigame6/thumbnail.svg");
 		this.load.image("minigame7-thumb", "/minigames/minigame7/thumbnail.svg");
+		this.load.image("minigame8-thumb", "/minigames/minigame8/thumbnail.svg");
 		this.load.image("skater-sprite", "/minigames/minigame2/skater.png");
 		this.load.image("rider-sprite", "/minigames/minigame4/rider.png");
 		this.load.image("player-knight-sprite", "/minigames/minigame5/player-knight.png");
@@ -65,6 +66,14 @@ export class PreloadScene extends Phaser.Scene {
 		this.load.image("minigame7-plane2", "/minigames/minigame7/plane2.png");
 		this.load.image("minigame7-plane3", "/minigames/minigame7/plane3.png");
 		this.load.image("minigame7-plane4", "/minigames/minigame7/plane4.png");
+		this.load.image("minigame8-chocolate", "/minigames/minigame8/chocolate.png");
+		this.load.image("minigame8-cinnamon", "/minigames/minigame8/cinnamon.png");
+		this.load.image("minigame8-jug-cold", "/minigames/minigame8/jug-cold.png");
+		this.load.image("minigame8-large-cup", "/minigames/minigame8/large-cup.png");
+		this.load.image("minigame8-machine", "/minigames/minigame8/machine.png");
+		this.load.image("minigame8-milk", "/minigames/minigame8/milk.png");
+		this.load.image("minigame8-oat-milk", "/minigames/minigame8/oat-milk.png");
+		this.load.image("minigame8-small-cup", "/minigames/minigame8/small-cup.png");
 		this.load.image("next-mark", "/next.svg");
 		this.load.image("globe-icon", "/globe.svg");
 		this.load.image("file-icon", "/file.svg");

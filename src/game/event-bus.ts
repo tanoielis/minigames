@@ -53,6 +53,29 @@ type GameEventMap = {
 	"action-press": {
 		active: boolean;
 	};
+	"minigame8-action": {
+		action:
+			| "small-cup"
+			| "large-cup"
+			| "regular-milk"
+			| "oat-milk"
+			| "pull-left"
+			| "pull-right"
+			| "pour-milk"
+			| "chocolate"
+			| "cinnamon";
+	};
+	"minigame8-controls": {
+		smallCupDisabled: boolean;
+		largeCupDisabled: boolean;
+		regularMilkDisabled: boolean;
+		oatMilkDisabled: boolean;
+		pullLeftDisabled: boolean;
+		pullRightDisabled: boolean;
+		pourMilkDisabled: boolean;
+		chocolateDisabled: boolean;
+		cinnamonDisabled: boolean;
+	};
 	"minigame9-action": {
 		action: "deal" | "hit" | "stand";
 	};
@@ -106,6 +129,8 @@ export const GAME_EVENTS = {
 	GAME_STATE: "game-state",
 	RESTART_GAME: "restart-game",
 	ACTION_PRESS: "action-press",
+	MINIGAME8_ACTION: "minigame8-action",
+	MINIGAME8_CONTROLS: "minigame8-controls",
 	BOXING_ACTION: "boxing-action",
 	MINIGAME6_CONTROLS: "minigame6-controls",
 	MINIGAME7_TURN: "minigame7-turn",

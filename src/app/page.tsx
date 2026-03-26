@@ -51,6 +51,12 @@ const minigames = [
 		thumbnail: "/minigames/minigame7/thumbnail.svg",
 	},
 	{
+		slug: "minigame8",
+		title: "Coffee Chaos",
+		description: "Juggle two brew heads, one steam wand, and a growing cafe queue before the rush collapses.",
+		thumbnail: "/minigames/minigame8/thumbnail.svg",
+	},
+	{
 		slug: "minigame9",
 		title: "Blackjack",
 		description: "Hit or stand to beat the dealer in this quick card table race.",
