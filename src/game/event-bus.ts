@@ -53,6 +53,9 @@ type GameEventMap = {
 	"action-press": {
 		active: boolean;
 	};
+	"minigame9-action": {
+		action: "deal" | "hit" | "stand";
+	};
 	"boxing-action": {
 		action: "jab" | "hook" | "block";
 	};
@@ -106,6 +109,7 @@ export const GAME_EVENTS = {
 	BOXING_ACTION: "boxing-action",
 	MINIGAME6_CONTROLS: "minigame6-controls",
 	MINIGAME7_TURN: "minigame7-turn",
+	MINIGAME9_ACTION: "minigame9-action",
 	MINIGAME7_BOOST: "minigame7-boost",
 	MINIGAME7_CONTROLS: "minigame7-controls",
 } as const;

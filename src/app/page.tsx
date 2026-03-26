@@ -50,6 +50,12 @@ const minigames = [
 		description: "Bank through open sky, dodge hostile planes, and survive twenty seconds above the ocean.",
 		thumbnail: "/minigames/minigame7/thumbnail.svg",
 	},
+	{
+		slug: "minigame9",
+		title: "Blackjack",
+		description: "Hit or stand to beat the dealer in this quick card table race.",
+		thumbnail: "/minigames/minigame9/thumbnail.svg",
+	},
 ];
 
 const COMPACT_MODE_KEY = "cyber-menu-compact";
