@@ -8,6 +8,7 @@ export const MINIGAME_SLUGS = [
 	"minigame7",
 	"minigame8",
 	"minigame9",
+	"minigame10",
 ] as const;
 
 export type MinigameSlug = (typeof MINIGAME_SLUGS)[number];

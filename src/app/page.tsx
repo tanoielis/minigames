@@ -62,6 +62,12 @@ const minigames = [
 		description: "Hit or stand to beat the dealer in this quick card table race.",
 		thumbnail: "/minigames/minigame9/thumbnail.svg",
 	},
+	{
+		slug: "minigame10",
+		title: "Street Sprint",
+		description: "Hold the throttle, release to shift, and time your upshifts to beat a rival car down the strip.",
+		thumbnail: "/minigames/minigame10/thumbnail.svg",
+	},
 ];
 
 const COMPACT_MODE_KEY = "cyber-menu-compact";

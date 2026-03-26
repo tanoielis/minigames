@@ -53,6 +53,8 @@ export class PreloadScene extends Phaser.Scene {
 		this.load.image("minigame6-thumb", "/minigames/minigame6/thumbnail.svg");
 		this.load.image("minigame7-thumb", "/minigames/minigame7/thumbnail.svg");
 		this.load.image("minigame8-thumb", "/minigames/minigame8/thumbnail.svg");
+		this.load.image("minigame9-thumb", "/minigames/minigame9/thumbnail.svg");
+		this.load.image("minigame10-thumb", "/minigames/minigame10/thumbnail.svg");
 		this.load.image("skater-sprite", "/minigames/minigame2/skater.png");
 		this.load.image("rider-sprite", "/minigames/minigame4/rider.png");
 		this.load.image("player-knight-sprite", "/minigames/minigame5/player-knight.png");
@@ -74,6 +76,10 @@ export class PreloadScene extends Phaser.Scene {
 		this.load.image("minigame8-milk", "/minigames/minigame8/milk.png");
 		this.load.image("minigame8-oat-milk", "/minigames/minigame8/oat-milk.png");
 		this.load.image("minigame8-small-cup", "/minigames/minigame8/small-cup.png");
+		this.load.image("minigame10-blue-car", "/minigames/minigame10/blue-car.png");
+		this.load.image("minigame10-green-car", "/minigames/minigame10/green-car.png");
+		this.load.image("minigame10-orange-car", "/minigames/minigame10/orange-car.png");
+		this.load.image("minigame10-red-car", "/minigames/minigame10/red-car.png");
 		this.load.image("next-mark", "/next.svg");
 		this.load.image("globe-icon", "/globe.svg");
 		this.load.image("file-icon", "/file.svg");

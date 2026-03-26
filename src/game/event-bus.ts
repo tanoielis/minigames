@@ -79,6 +79,16 @@ type GameEventMap = {
 	"minigame9-action": {
 		action: "deal" | "hit" | "stand";
 	};
+	"minigame10-throttle": {
+		active: boolean;
+	};
+	"minigame10-shift": {
+		triggered: boolean;
+	};
+	"minigame10-controls": {
+		accelerateDisabled: boolean;
+		shiftDisabled: boolean;
+	};
 	"boxing-action": {
 		action: "jab" | "hook" | "block";
 	};
@@ -135,6 +145,9 @@ export const GAME_EVENTS = {
 	MINIGAME6_CONTROLS: "minigame6-controls",
 	MINIGAME7_TURN: "minigame7-turn",
 	MINIGAME9_ACTION: "minigame9-action",
+	MINIGAME10_THROTTLE: "minigame10-throttle",
+	MINIGAME10_SHIFT: "minigame10-shift",
+	MINIGAME10_CONTROLS: "minigame10-controls",
 	MINIGAME7_BOOST: "minigame7-boost",
 	MINIGAME7_CONTROLS: "minigame7-controls",
 } as const;
